@@ -1,36 +1,71 @@
-import * as React from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import React, { useState } from "react";
+import {
+  Button,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import Constants from "expo-constants";
+import * as SQLite from "expo-sqlite";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+const db = SQLite.openDatabase("db.db");
+import TrackerScreen from "./components/Tracker";
+import HelpScreen from "./components/Help";
+//import * as rssParser from "react-native-rss-parser";
 
-const instructions = Platform.select({
-  ios: `Press Cmd+R to reload,\nCmd+D or shake for dev menu`,
-  android: `Double tap R on your keyboard to reload,\nShake or press menu button for dev menu`,
-});
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Tracker" component={TrackerScreen} />
+        <Stack.Screen name="Help" component={HelpScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+function HomeScreen({ navigation }) {
+  return (
     <View style={styles.container}>
-      <Text style={styles.welcome}>Welcome to React Native!</Text>
-      <Text style={styles.instructions}>To get started, edit App.js</Text>
-      <Text style={styles.instructions}>{instructions}</Text>
+      <View style={styles.nav}>
+        <Button title="Home" onPress={() => navigation.navigate("Home")} />
+        <Button title="Tracker" onPress={() => navigation.push("Tracker")} />
+        <Button title="Help" onPress={() => navigation.push("Help")} />
+      </View>
+      <View
+        style={{
+          flex: 1,
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Text>Home Screen</Text>
+        <Button
+          title="Go to Help Details"
+          onPress={() => navigation.navigate("Details")}
+        />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "#fff",
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
+  nav: {
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+    flexDirection: "row",
   },
 });
